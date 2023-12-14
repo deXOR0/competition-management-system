@@ -43,10 +43,88 @@ export class CompetitionComponent implements OnInit {
     const firstScore = Number(this.firstPlayerScore.nativeElement.value);
     const secondScore = Number(this.secondPlayerScore.nativeElement.value);
 
+    if (firstScore == 0 && secondScore == 0) {
+      return;
+    }
+
+    if (
+      this.matches[this.currentMatch].first.points != 0 &&
+      this.matches[this.currentMatch].second.points != 0
+    ) {
+      console.log('Update');
+      this.players[
+        this.players
+          .map((e) => e.id)
+          .indexOf(this.matches[this.currentMatch].first.id)
+      ].pts -= this.calculatePts(
+        this.matches[this.currentMatch].first.points,
+        this.matches[this.currentMatch].second.points
+      );
+      this.players[
+        this.players
+          .map((e) => e.id)
+          .indexOf(this.matches[this.currentMatch].second.id)
+      ].pts -= this.calculatePts(
+        this.matches[this.currentMatch].second.points,
+        this.matches[this.currentMatch].first.points
+      );
+      this.players[
+        this.players
+          .map((e) => e.id)
+          .indexOf(this.matches[this.currentMatch].first.id)
+      ].pf -= this.matches[this.currentMatch].first.points;
+      this.players[
+        this.players
+          .map((e) => e.id)
+          .indexOf(this.matches[this.currentMatch].second.id)
+      ].pf -= this.matches[this.currentMatch].second.points;
+      this.players[
+        this.players
+          .map((e) => e.id)
+          .indexOf(this.matches[this.currentMatch].first.id)
+      ].pa -= this.matches[this.currentMatch].second.points;
+      this.players[
+        this.players
+          .map((e) => e.id)
+          .indexOf(this.matches[this.currentMatch].second.id)
+      ].pa -= this.matches[this.currentMatch].first.points;
+      const firstDiff =
+        this.matches[this.currentMatch].first.points -
+        this.matches[this.currentMatch].second.points;
+      const secondDiff =
+        this.matches[this.currentMatch].second.points -
+        this.matches[this.currentMatch].first.points;
+      this.players[
+        this.players
+          .map((e) => e.id)
+          .indexOf(this.matches[this.currentMatch].first.id)
+      ].pd -= firstDiff;
+      this.players[
+        this.players
+          .map((e) => e.id)
+          .indexOf(this.matches[this.currentMatch].second.id)
+      ].pd -= secondDiff;
+    }
+
     this.matches[this.currentMatch].first.points = firstScore;
     this.matches[this.currentMatch].second.points = secondScore;
 
     this.common.saveData(this.common.MATCHES_KEY, this.matches);
+
+    console.log(
+      this.players[
+        this.players
+          .map((e) => e.id)
+          .indexOf(this.matches[this.currentMatch].first.id)
+      ]
+    );
+    console.log(
+      this.players[
+        this.players
+          .map((e) => e.id)
+          .indexOf(this.matches[this.currentMatch].second.id)
+      ]
+    );
 
     if (firstScore > secondScore) {
       this.players[
@@ -72,9 +150,6 @@ export class CompetitionComponent implements OnInit {
           .indexOf(this.matches[this.currentMatch].second.id)
       ].pts += 1;
     }
-
-    console.log(this.players.indexOf(this.matches[this.currentMatch].first.id));
-    console.log(this.matches[this.currentMatch].first.id);
 
     this.players[
       this.players
@@ -115,6 +190,16 @@ export class CompetitionComponent implements OnInit {
 
     this.firstPlayerScore.nativeElement.value = '';
     this.secondPlayerScore.nativeElement.value = '';
+  }
+
+  calculatePts(a: number, b: number) {
+    if (a > b) {
+      return 3;
+    } else if (b > a) {
+      return 0;
+    } else {
+      return 1;
+    }
   }
 
   endCompetition() {
