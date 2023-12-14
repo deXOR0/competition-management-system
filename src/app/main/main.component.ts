@@ -11,17 +11,20 @@ import { CommonService } from '../common.service';
 })
 export class MainComponent implements OnInit {
   @ViewChild('initialField') initialInput: any;
+  @ViewChild('sessionField') sessionInput: any;
   players: any[] = [];
+  session: any = {};
 
   constructor(private router: Router, private common: CommonService) {}
 
-  ngOnInit(): void {
+  async ngOnInit() {
     console.log('Main');
+    await this.createSession();
   }
 
   addPlayer(initial: string) {
     const newPlayer = {
-      id: nanoid(5),
+      id: this.common.createId(5),
       initial: initial.trim().toUpperCase(),
       pts: 0,
       pa: 0,
@@ -37,10 +40,28 @@ export class MainComponent implements OnInit {
     this.players = this.players.filter((p) => p.id != id);
   }
 
-  startCompetition() {
+  async startCompetition() {
     const matches = this.common.generateMatchesFromPlayers(this.players);
-    this.common.saveData(this.common.PLAYERS_KEY, this.players);
-    this.common.saveData(this.common.MATCHES_KEY, matches);
+
+    this.session.sessionData.players = this.players;
+    this.session.sessionData.matches = matches;
+
+    await this.common.updateSessionData(this.session);
+
     this.router.navigate(['/competition']);
+  }
+
+  joinSession(sessionId: string) {
+    this.common.saveData(this.common.SESSION_KEY, sessionId);
+    this.router.navigate(['/competition']);
+  }
+
+  async createSession() {
+    this.session = await this.common.createSession();
+
+    console.log(this.session);
+
+    this.sessionInput.nativeElement.value =
+      this.session.sessionId.toUpperCase();
   }
 }

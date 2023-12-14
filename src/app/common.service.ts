@@ -7,6 +7,8 @@ import { nanoid } from 'nanoid';
 export class CommonService {
   PLAYERS_KEY = 'players';
   MATCHES_KEY = 'matches';
+  SESSION_KEY = 'session';
+  API_BASE_URL = 'http://localhost:8000/v1';
 
   constructor() {}
 
@@ -144,5 +146,54 @@ export class CommonService {
 
   createId(length: number) {
     return nanoid(length);
+  }
+
+  async createSession() {
+    const response = await fetch(this.API_BASE_URL + '/session', {
+      method: 'post',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        sessionData: {
+          players: [],
+          matches: [],
+        },
+      }),
+    });
+
+    const data = await response.json();
+
+    this.saveData(this.SESSION_KEY, data.sessionId);
+
+    return data;
+  }
+
+  async updateSessionData(session: any) {
+    const { players, matches } = session.sessionData;
+
+    const response = await fetch(this.API_BASE_URL + '/session', {
+      method: 'post',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        sessionId: session.sessionId,
+        sessionData: {
+          players,
+          matches,
+        },
+      }),
+    });
+  }
+
+  async getSessionData(sessionId: string) {
+    const response = await fetch(this.API_BASE_URL + `/session/${sessionId}`);
+
+    const data = await response.json();
+
+    return data;
   }
 }

@@ -14,7 +14,26 @@
   <body>
     <div class="container">
       <h1 style="text-align: center">Competition Management System</h1>
-      <div class="d-flex flex-column align-items-center mt-5">
+      <div class="mt-5">
+        <div class="d-flex flex-column align-items-center">
+          <div class="d-flex justify-content-center">
+            <input
+              #sessionField
+              style="width: 250px; text-align: center"
+              type="text"
+            />
+          </div>
+          <div class="mt-2">
+            <button
+              (click)="joinSession(sessionField.value)"
+              class="btn btn-sm btn-success"
+            >
+              Join Session
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex flex-column align-items-center mt-3">
         <div class="d-flex justify-content-center">
           <input #initialField style="width: 250px" type="text" />
         </div>

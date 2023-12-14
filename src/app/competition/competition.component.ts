@@ -12,21 +12,29 @@ export class CompetitionComponent implements OnInit {
   matches: any[] = [];
   players: any[] = [];
   currentMatch = 0;
+  session: any = {};
+  sessionId: string = '';
+  isDataLoaded = false;
 
   @ViewChild('firstPlayerScore') firstPlayerScore: any;
   @ViewChild('secondPlayerScore') secondPlayerScore: any;
+  @ViewChild('sessionIdOutput') sessionIdOutput: any;
 
   constructor(private common: CommonService, private router: Router) {}
 
-  ngOnInit(): void {
-    this.players = this.common.loadData(this.common.PLAYERS_KEY, '[]');
-
-    if (!this.common.isDataExists(this.common.MATCHES_KEY)) {
-      this.matches = this.common.generateMatchesFromPlayers(this.players);
-      this.common.saveData(this.common.MATCHES_KEY, this.matches);
-    } else {
-      this.matches = this.common.loadData(this.common.MATCHES_KEY, '[]');
+  async ngOnInit() {
+    console.log('Starting comp');
+    this.isDataLoaded = false;
+    if (this.common.isDataExists(this.common.SESSION_KEY)) {
+      this.sessionId = this.common.loadData(this.common.SESSION_KEY, '');
     }
+
+    this.session = await this.common.getSessionData(this.sessionId);
+
+    this.players = this.session.sessionData.players;
+    console.log('Players: ' + this.players);
+    this.matches = this.session.sessionData.matches;
+    this.isDataLoaded = true;
   }
 
   loadPreviousMatch() {
@@ -36,10 +44,12 @@ export class CompetitionComponent implements OnInit {
   }
 
   loadNextMatch() {
-    ++this.currentMatch % this.matches.length;
+    if (this.currentMatch < this.matches.length - 1) {
+      this.currentMatch++;
+    }
   }
 
-  updateScore() {
+  async updateScore() {
     const firstScore = Number(this.firstPlayerScore.nativeElement.value);
     const secondScore = Number(this.secondPlayerScore.nativeElement.value);
 
@@ -109,7 +119,7 @@ export class CompetitionComponent implements OnInit {
     this.matches[this.currentMatch].first.points = firstScore;
     this.matches[this.currentMatch].second.points = secondScore;
 
-    this.common.saveData(this.common.MATCHES_KEY, this.matches);
+    this.session.sessionData.matches = this.matches;
 
     console.log(
       this.players[
@@ -186,7 +196,14 @@ export class CompetitionComponent implements OnInit {
       (a, b) => b.pts - a.pts || b.pf - a.pf || a.pa - b.pa || b.pd - a.pd
     );
 
-    this.common.saveData(this.common.PLAYERS_KEY, this.players);
+    this.session.sessionData.players = this.players;
+
+    console.log(this.session.sessionData.players);
+    console.log(this.session.sessionData.matches);
+
+    console.log(this.session);
+
+    await this.common.updateSessionData(this.session);
 
     this.firstPlayerScore.nativeElement.value = '';
     this.secondPlayerScore.nativeElement.value = '';
@@ -202,10 +219,12 @@ export class CompetitionComponent implements OnInit {
     }
   }
 
-  endCompetition() {
-    this.common.saveData(this.common.MATCHES_KEY, []);
-    this.common.saveData(this.common.PLAYERS_KEY, []);
+  copySessionId() {
+    const text = this.sessionIdOutput.nativeElement.value;
+    navigator.clipboard.writeText(text);
+  }
 
+  endCompetition() {
     this.router.navigate(['/']);
   }
 }
