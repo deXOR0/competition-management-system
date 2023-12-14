@@ -1,0 +1,29 @@
+.score-box {
+  width: 2em;
+  text-align: center;
+}
+
+.pair {
+  width: 2.5em;
+  text-align: center;
+  margin-right: 0.25em;
+  margin-left: 0.25em;
+}
+
+.navigate-match {
+  width: 10em !important;
+}
+
+td {
+  text-align: center;
+}
+
+.table-container {
+  flex-direction: row;
+}
+
+@media (max-width: 576px) {
+  .table-container {
+    flex-direction: column;
+  }
+}

@@ -8,7 +8,7 @@ export class CommonService {
   PLAYERS_KEY = 'players';
   MATCHES_KEY = 'matches';
   SESSION_KEY = 'session';
-  API_BASE_URL = 'http://localhost:8000/v1';
+  API_BASE_URL = 'https://api.awesa.xyz/v1';
 
   constructor() {}
 
