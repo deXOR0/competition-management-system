@@ -63,7 +63,7 @@ export class CompetitionComponent implements OnInit {
       return;
     }
 
-    this.session = await this.common.getSessionData(this.session);
+    this.session = await this.common.getSessionData(this.sessionId);
     this.players = this.session.sessionData.players;
     this.matches = this.session.sessionData.matches;
 
