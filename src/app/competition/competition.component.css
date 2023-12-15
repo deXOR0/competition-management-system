@@ -27,10 +27,3 @@ td {
     flex-direction: column;
   }
 }
-
-p {
-  width: 10ch;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
