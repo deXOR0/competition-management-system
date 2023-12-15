@@ -33,7 +33,6 @@ export class CompetitionComponent implements OnInit {
 
     if (this.session.sessionData) {
       this.players = this.session.sessionData.players;
-      console.log('Players: ' + this.players);
       this.matches = this.session.sessionData.matches;
       this.isDataLoaded = true;
     } else {
@@ -63,6 +62,10 @@ export class CompetitionComponent implements OnInit {
     if (firstScore == 0 && secondScore == 0) {
       return;
     }
+
+    this.session = await this.common.getSessionData(this.session);
+    this.players = this.session.sessionData.players;
+    this.matches = this.session.sessionData.matches;
 
     if (
       this.matches[this.currentMatch].first.points != 0 &&
