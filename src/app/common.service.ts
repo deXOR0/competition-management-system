@@ -148,7 +148,7 @@ export class CommonService {
     return nanoid(length);
   }
 
-  async createSession() {
+  async createEmptySession() {
     const response = await fetch(this.API_BASE_URL + '/session', {
       method: 'post',
       headers: {
@@ -170,11 +170,30 @@ export class CommonService {
     return data;
   }
 
-  async updateSessionData(session: any) {
+  async createSession(session: any) {
     const { players, matches } = session.sessionData;
 
     const response = await fetch(this.API_BASE_URL + '/session', {
       method: 'post',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        sessionId: session.sessionId,
+        sessionData: {
+          players,
+          matches,
+        },
+      }),
+    });
+  }
+
+  async updateSessionData(session: any) {
+    const { players, matches } = session.sessionData;
+
+    const response = await fetch(this.API_BASE_URL + '/session', {
+      method: 'put',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',

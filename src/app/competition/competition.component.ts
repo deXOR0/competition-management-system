@@ -72,6 +72,16 @@ export class CompetitionComponent implements OnInit {
         this.players
           .map((e) => e.id)
           .indexOf(this.matches[this.currentMatch].first.id)
+      ].mp--;
+      this.players[
+        this.players
+          .map((e) => e.id)
+          .indexOf(this.matches[this.currentMatch].second.id)
+      ].mp--;
+      this.players[
+        this.players
+          .map((e) => e.id)
+          .indexOf(this.matches[this.currentMatch].first.id)
       ].pts -= this.calculatePts(
         this.matches[this.currentMatch].first.points,
         this.matches[this.currentMatch].second.points
@@ -121,6 +131,17 @@ export class CompetitionComponent implements OnInit {
           .indexOf(this.matches[this.currentMatch].second.id)
       ].pd -= secondDiff;
     }
+
+    this.players[
+      this.players
+        .map((e) => e.id)
+        .indexOf(this.matches[this.currentMatch].first.id)
+    ].mp++;
+    this.players[
+      this.players
+        .map((e) => e.id)
+        .indexOf(this.matches[this.currentMatch].second.id)
+    ].mp++;
 
     this.matches[this.currentMatch].first.points = firstScore;
     this.matches[this.currentMatch].second.points = secondScore;
@@ -199,7 +220,12 @@ export class CompetitionComponent implements OnInit {
     ].pd += secondScore - firstScore;
 
     this.players = this.players.sort(
-      (a, b) => b.pts - a.pts || b.pf - a.pf || a.pa - b.pa || b.pd - a.pd
+      (a, b) =>
+        b.pts - a.pts ||
+        a.mp - b.mp ||
+        b.pf - a.pf ||
+        a.pa - b.pa ||
+        b.pd - a.pd
     );
 
     this.session.sessionData.players = this.players;

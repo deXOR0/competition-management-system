@@ -27,6 +27,7 @@ export class MainComponent implements OnInit {
     const newPlayer = {
       id: this.common.createId(5),
       initial: initial.trim().toUpperCase(),
+      mp: 0,
       pts: 0,
       pa: 0,
       pf: 0,
