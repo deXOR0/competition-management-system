@@ -24,6 +24,7 @@ export class MainComponent implements OnInit {
   }
 
   addPlayer(initial: string) {
+    initial = initial.trim();
     if (!initial || initial == '') {
       return;
     }
@@ -62,6 +63,7 @@ export class MainComponent implements OnInit {
   }
 
   joinSession(sessionId: string) {
+    sessionId = sessionId.trim();
     if (!sessionId || sessionId == '') {
       return;
     }

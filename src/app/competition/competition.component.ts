@@ -40,6 +40,7 @@ export class CompetitionComponent implements OnInit {
       alert(
         `${this.sessionId} does not exist, has the competition been started?`
       );
+      this.router.navigate(['/']);
     }
   }
 
