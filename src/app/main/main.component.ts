@@ -14,7 +14,7 @@ export class MainComponent implements OnInit {
   @ViewChild('sessionField') sessionInput: any;
   @ViewChild('sessionIdOutput') sessionIdOutput: any;
   players: any[] = [];
-  session: any = { sessionId: '' };
+  session: any = { sessionId: 'Loading...' };
 
   constructor(private router: Router, private common: CommonService) {}
 
