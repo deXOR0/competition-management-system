@@ -24,6 +24,9 @@ export class MainComponent implements OnInit {
   }
 
   addPlayer(initial: string) {
+    if (!initial || initial == '') {
+      return;
+    }
     const newPlayer = {
       id: this.common.createId(5),
       initial: initial.trim().toUpperCase(),
@@ -59,6 +62,9 @@ export class MainComponent implements OnInit {
   }
 
   joinSession(sessionId: string) {
+    if (!sessionId || sessionId == '') {
+      return;
+    }
     this.common.saveData(this.common.SESSION_KEY, sessionId);
     this.router.navigate(['/competition']);
   }
