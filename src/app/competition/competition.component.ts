@@ -31,10 +31,16 @@ export class CompetitionComponent implements OnInit {
 
     this.session = await this.common.getSessionData(this.sessionId);
 
-    this.players = this.session.sessionData.players;
-    console.log('Players: ' + this.players);
-    this.matches = this.session.sessionData.matches;
-    this.isDataLoaded = true;
+    if (this.session.sessionData) {
+      this.players = this.session.sessionData.players;
+      console.log('Players: ' + this.players);
+      this.matches = this.session.sessionData.matches;
+      this.isDataLoaded = true;
+    } else {
+      alert(
+        `${this.sessionId} does not exist, has the competition been started?`
+      );
+    }
   }
 
   loadPreviousMatch() {
@@ -222,6 +228,7 @@ export class CompetitionComponent implements OnInit {
   copySessionId() {
     const text = this.sessionIdOutput.nativeElement.value;
     navigator.clipboard.writeText(text);
+    alert('Session ID copied!');
   }
 
   endCompetition() {

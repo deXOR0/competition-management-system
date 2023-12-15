@@ -196,4 +196,12 @@ export class CommonService {
 
     return data;
   }
+
+  async createSessionId() {
+    const response = await fetch(this.API_BASE_URL + `/session/id`);
+
+    const data = await response.json();
+
+    return data;
+  }
 }

@@ -12,14 +12,15 @@ import { CommonService } from '../common.service';
 export class MainComponent implements OnInit {
   @ViewChild('initialField') initialInput: any;
   @ViewChild('sessionField') sessionInput: any;
+  @ViewChild('sessionIdOutput') sessionIdOutput: any;
   players: any[] = [];
-  session: any = {};
+  session: any = { sessionId: '' };
 
   constructor(private router: Router, private common: CommonService) {}
 
   async ngOnInit() {
     console.log('Main');
-    await this.createSession();
+    await this.createSessionId();
   }
 
   addPlayer(initial: string) {
@@ -41,6 +42,11 @@ export class MainComponent implements OnInit {
   }
 
   async startCompetition() {
+    if (this.players.length < 2) {
+      alert('At least two players are required to start a competition');
+
+      return;
+    }
     const matches = this.common.generateMatchesFromPlayers(this.players);
 
     this.session.sessionData.players = this.players;
@@ -56,12 +62,18 @@ export class MainComponent implements OnInit {
     this.router.navigate(['/competition']);
   }
 
-  async createSession() {
-    this.session = await this.common.createSession();
+  async createSessionId() {
+    const { sessionId } = await this.common.createSessionId();
+    this.common.saveData(this.common.SESSION_KEY, sessionId);
+
+    this.session = { sessionId, sessionData: {} };
 
     console.log(this.session);
+  }
 
-    this.sessionInput.nativeElement.value =
-      this.session.sessionId.toUpperCase();
+  copySessionId() {
+    const text = this.sessionIdOutput.nativeElement.value;
+    navigator.clipboard.writeText(text);
+    alert('Session ID copied!');
   }
 }

@@ -54,5 +54,6 @@ export class HistoryComponent implements OnInit {
   copySessionId() {
     const text = this.sessionIdOutput.nativeElement.value;
     navigator.clipboard.writeText(text);
+    alert('Session ID copied!');
   }
 }
